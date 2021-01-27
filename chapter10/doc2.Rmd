@@ -1,0 +1,16 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+dataCanadaFullLong <- readr::read_csv("./data/chapter10data.csv")
+```
+```{r}
+dataCanadaFullLong$isicCode <- as.character(dataCanadaFullLong$isicCode)
+```
+

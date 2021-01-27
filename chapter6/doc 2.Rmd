@@ -1,0 +1,109 @@
+---
+title: "Untitled"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+library(gsheet)
+cities <- gsheet2tbl("https://docs.google.com/spreadsheets/d/1uLaXke-KPN28-ESPPoihk8TiXVWp5xuNGHW7w7yqLCc/edit#gid=1861940365")
+library(dplyr)
+cities %>%
+  glimpse()
+```
+
+
+
+
+```{r}
+# Loading the dataset into a variable named dataLab2
+library(readr)
+dataLab2 <- readr::read_csv("./data/gdpCountry.csv")
+```
+```{r}
+library(readr)
+gdp <- read_csv("./data/chapter6data.csv")
+
+library(gsheet)
+locations <-gsheet2tbl("https://docs.google.com/spreadsheets/d/1nehKEBKTQx11LZuo5ZJFKTVS0p5y1ysMPSOSX_m8dS8/edit?usp=sharing")
+```
+```{r}
+# Add a new column called 'newColumn'
+cities$newColumn <- 42
+# Show the columns' name
+colnames(cities)
+# Show the column 'newColumn'
+head(cities[,"newColumn"])
+
+head(cities, n=10)
+```
+
+
+```{r}
+library(dplyr)
+# Rename the newColumn
+cities <- cities %>% 
+  rename(hahaha = newColumnRenamed)
+colnames(cities)
+```
+
+
+```{r}
+# Loading the gsheet package
+library(gsheet)
+# Read data from the URL
+variablesUnido <- gsheet::gsheet2tbl("https://docs.google.com/spreadsheets/d/1JYiydgI9QEOKAStmtmrBTmGuGQ0bx1gnnarO4Db0MD8/edit#gid=919352283")
+head(variablesUnido)
+```
+
+
+```{r}
+cities$hahaha <- NULL
+```
+```{r}
+# Loading the gsheet package
+library(gsheet)
+# Read data from the URL
+dataUnido <- gsheet::gsheet2tbl("https://docs.google.com/spreadsheets/d/1uLaXke-KPN28-ESPPoihk8TiXVWp5xuNGHW7w7yqLCc/edit#gid=416085055")
+```
+
+
+```{r}
+head(dataUnido)
+```
+```{r}
+# Loading the dplyr package
+library(dplyr)
+# Subset of dataUnido based on countryCode == Canada
+dataUnidoCanada <- filter(dataUnido, countryCode == 124)
+```
+```{r}
+# Loading the dplyr package
+library(dplyr)
+# Subset of dataUnido based on countryCode == Canada
+dataUnido2012 <- filter(dataUnido, year == 2012)
+```
+```{r}
+# dataSorted will receive the dataframe dataUnidoCanadaVariablesAfter2009 sorted by the column value
+dataSorted <- arrange(dataUnidoCanada, value)
+# first 6 lines of the dataset
+head(dataSorted)
+```
+```{r}
+# dataReverse is the opposite of dataSorted, i.e. the first lines will have the highest values
+dataReverse <- arrange(dataUnidoCanada, desc(value))
+# first 6 lines of the dataset
+head(dataReverse)
+```
+```{r}
+# Loading tidyr
+library(tidyr)
+# Using pivot_wider() to transform a long dataframe into a wide dataframe
+wideData <- dataSorted %>%
+  pivot_wider(names_from = isicCode, values_from = value)
+
+```
+

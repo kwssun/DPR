@@ -7,22 +7,66 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+library(readr)
+gdp <- readr::read_csv("./data/chapter6data.csv")
+```
+```{r}
+library(gsheet)
+locations <-gsheet::gsheet2tbl("https://docs.google.com/spreadsheets/d/1nehKEBKTQx11LZuo5ZJFKTVS0p5y1ysMPSOSX_m8dS8/edit?usp=sharing")
+```
+```{r}
+gdp$X1 <- NULL
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+library(dplyr)
+gdp2 <- filter(gdp, country == "United States" | country ==  "Canada" | country == "Japan" | country =="Belgium" | country == "France") 
+```
+```{r}
+library(tidyr)
+gdp3 <- gdp2 %>%
+  pivot_longer(!c(country), names_to = "year", values_to = "gdp")
+```
+```{r}
+ 
+library(gsheet)
+# Read data from the URL
+dataUnido <- gsheet::gsheet2tbl("https://docs.google.com/spreadsheets/d/1uLaXke-KPN28-ESPPoihk8TiXVWp5xuNGHW7w7yqLCc/edit#gid=416085055")
+# erasing non important variables
+dataUnido$isicCodeCombinaison <- NULL
+dataUnido$tableDefinitionCode <- NULL
+dataUnido$sourceCode <- NULL
+dataUnido$updateYear <- NULL
+dataUnido$unit <- NULL
+```
+```{r}
+# Loading the dplyr package
+library(tidyverse)
+# Dataset for dataCanada
+dataCanada131 <- filter(dataUnido, countryCode == 76)
+dataCanada131 <- filter(dataCanada131, isicCode == 131)
+dataCanada131 <- filter(dataCanada131, tableCode == 4)
+dataCanada131 <- filter(dataCanada131, year > 2008)
+dataCanada131 <- dataCanada131 %>%
+  pivot_wider(names_from = isicCode, values_from = value)
+head(dataCanada131)
+```
+```{r}
+# Dataset for dataCanada181
+dataCanada181 <- filter(dataUnido, countryCode == 76)
+dataCanada181 <- filter(dataCanada181, isicCode == 181)
+dataCanada181 <- filter(dataCanada181, tableCode == 4)
+dataCanada181 <- filter(dataCanada181, year > 2008)
+dataCanada181 <- dataCanada181 %>%
+  pivot_wider(names_from = isicCode, values_from = value)
+head(dataCanada181)
+```
+```{r}
+# Merging 2 datasets
+dataCanadaFull <- left_join(dataCanada131, dataCanada181, c("year","tableCode","countryCode"))
+# First 6 lines
+head(dataCanadaFull)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
